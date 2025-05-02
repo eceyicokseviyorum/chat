@@ -2,17 +2,21 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>WhatsApp Sohbet Ekranı</title>
     <style>
+        * {
+            box-sizing: border-box;
+        }
+
         body {
             margin: 0;
             font-family: Arial, sans-serif;
-            background-color: #d3d3d3; /* Gri arka plan */
+            background-color: #d3d3d3;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
             overflow: hidden;
         }
 
@@ -24,7 +28,7 @@
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             display: flex;
             flex-direction: column;
-            height: 90vh;
+            min-height: 100vh;
             position: relative;
         }
 
@@ -114,6 +118,9 @@
             padding: 10px;
             background-color: #f0f0f0;
             border-top: 1px solid #ddd;
+            position: sticky;
+            bottom: 0;
+            z-index: 10;
         }
 
         .chat-input input {
@@ -127,7 +134,7 @@
 
         .chat-input button {
             padding: 10px 20px;
-            background-color: #075e54;
+            background-color: #075CafeSohbet.html54;
             color: #fff;
             border: none;
             border-radius: 20px;
@@ -136,6 +143,30 @@
 
         .chat-input button:hover {
             background-color: #064c44;
+        }
+
+        @media screen and (max-width: 600px) {
+            .chat-container {
+                max-width: 100%;
+                border-radius: 0;
+                min-height: 100vh;
+            }
+
+            .chat-body {
+                padding: 10px;
+            }
+
+            .chat-input {
+                padding: 8px;
+            }
+
+            .chat-input input {
+                padding: 8px;
+            }
+
+            .chat-input button {
+                padding: 8px 16px;
+            }
         }
     </style>
 </head>
@@ -158,23 +189,21 @@
     </div>
 
     <script>
-        let lastReceivedMessage = ''; // Son alınan mesajı takip etmek için
+        let lastReceivedMessage = '';
 
         function sendMessage() {
             const input = document.getElementById('message-input');
             const messageText = input.value.trim();
-            const messageTextLower = messageText.toLowerCase(); // Büyük-küçük harf duyarlılığı kaldırmak için
+            const messageTextLower = messageText.toLowerCase();
 
             if (messageText !== '') {
                 const chatBody = document.getElementById('chat-body');
                 
-                // Kullanıcının mesajı
                 const newMessage = document.createElement('div');
                 newMessage.classList.add('message', 'sent');
                 newMessage.innerHTML = `${messageText}<span class="message-time">${getCurrentTime()}</span>`;
                 chatBody.appendChild(newMessage);
 
-                // Özel mesajlar için cevaplar
                 if (messageTextLower === 'evet') {
                     setTimeout(() => {
                         const replyMessage = document.createElement('div');
@@ -233,12 +262,10 @@
         }
 
         function isEmoji(str) {
-            // Emoji kontrolü için düzenli ifade
             const emojiRegex = /^(?:[\u2700-\u27bf]|(?:\ud83c[\udde6-\uddff]){2}|[\ud800-\udbff][\udc00-\udfff]|[\u0023-\u0039]\ufe0f?\u20e3|\u3299|\u3297|\u303d|\u3030|\u24c2|\ud83c[\udd70-\udd71]|\ud83c[\udd7e-\udd7f]|\ud83c\udd8e|\ud83c[\udd91-\udd9a]|\ud83c[\udde6-\uddff]|\ud83c[\ude01-\ude02]|\ud83c\ude1a|\ud83c\ude2f|\ud83c[\ude32-\ude3a]|\ud83c[\ude50-\ude51]|\u203c|\u2049|\u25aa|\u25ab|\u25b6|\u25c0|\u25fb|\u25fc|\u25fd|\u25fe|\u2600|\u2601|\u260e|\u2611|\u2614|\u2615|\u261d|\u2620|\u2622|\u2623|\u2626|\u262a|\u262e|\u262f|\u2638|\u2639|\u263a|\u2640|\u2642|\u2648|\u2649|\u264a|\u264b|\u264c|\u264d|\u264e|\u264f|\u2650|\u2651|\u2652|\u2653|\u265f|\u2660|\u2663|\u2665|\u2666|\u2668|\u267b|\u267f|\u2692|\u2693|\u2694|\u2696|\u2697|\u2699|\u269b|\u269c|\u26a0|\u26a1|\u26aa|\u26ab|\u26b0|\u26b1|\u26bd|\u26be|\u26c4|\u26c5|\u26c8|\u26ce|\u26cf|\u26d1|\u26d3|\u26d4|\u26e9|\u26ea|\u26f0|\u26f1|\u26f2|\u26f3|\u26f4|\u26f5|\u26f7|\u26f8|\u26f9|\u26fa|\u26fd|\u2702|\u2705|\u2708|\u2709|\u270a|\u270b|\u270c|\u270d|\u2712|\u2714|\u2716|\u271d|\u2721|\u2728|\u2733|\u2734|\u2744|\u2747|\u274c|\u274e|\u2753|\u2754|\u2755|\u2757|\u2763|\u2764|\u2795|\u2796|\u2797|\u27a1|\u27b0|\u27bf|\ud83c[\udc00-\udfff]|\ud83d[\udc00-\udfff]|\ud83e[\udc00-\udfff])+$/;
             return emojiRegex.test(str);
         }
 
-        // Enter tuşu ile gönderme
         document.getElementById('message-input').addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 sendMessage();
